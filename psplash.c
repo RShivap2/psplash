@@ -61,6 +61,7 @@ psplash_draw_msg (PSplashFB *fb, const char *msg)
 			msg);
 }
 
+#ifdef PSPLASH_SHOW_PROGRESS_BAR
 void
 psplash_draw_progress (PSplashFB *fb, int value)
 {
@@ -95,6 +96,7 @@ psplash_draw_progress (PSplashFB *fb, int value)
   DBG("value: %i, width: %i, barwidth :%i\n", value, 
 		width, barwidth);
 }
+#endif /* PSPLASH_SHOW_PROGRESS_BAR */
 
 static int 
 parse_command (PSplashFB *fb, char *string)
@@ -108,20 +110,22 @@ parse_command (PSplashFB *fb, char *string)
 
   command = strtok(string," ");
 
-  if (!strcmp(command,"PROGRESS")) 
-    {
-      char *arg = strtok(NULL, "\0");
-
-      if (arg)
-        psplash_draw_progress (fb, atoi(arg));
-    } 
-  else if (!strcmp(command,"MSG")) 
+  if (!strcmp(command,"MSG"))
     {
       char *arg = strtok(NULL, "\0");
 
       if (arg)
         psplash_draw_msg (fb, arg);
     } 
+ #ifdef PSPLASH_DISABLE_PROGRESS_BAR
+  else  if (!strcmp(command,"PROGRESS"))
+    {
+      char *arg = strtok(NULL, "\0");
+
+      if (arg)
+        psplash_draw_progress (fb, atoi(arg));
+    } 
+#endif
   else if (!strcmp(command,"QUIT")) 
     {
       return 1;
@@ -311,8 +315,9 @@ main (int argc, char** argv)
 			 POKY_IMG_ROWSTRIDE,
 			 POKY_IMG_RLE_PIXEL_DATA);
 
+/*#ifdef PSPLASH_SHOW_PROGRESS_BAR
   /* Draw progress bar border */
-  psplash_fb_draw_image (fb, 
+  /*psplash_fb_draw_image (fb, 
 			 (fb->width  - BAR_IMG_WIDTH)/2, 
 			 SPLIT_LINE_POS(fb),
 			 BAR_IMG_WIDTH,
@@ -322,10 +327,11 @@ main (int argc, char** argv)
 			 BAR_IMG_RLE_PIXEL_DATA);
 
   psplash_draw_progress (fb, 0);
+#endif*/
 
-#ifdef PSPLASH_STARTUP_MSG
+/*#ifdef PSPLASH_STARTUP_MSG
   psplash_draw_msg (fb, PSPLASH_STARTUP_MSG);
-#endif
+#endif*/
 
   /* Scene set so let's flip the buffers. */
   /* The first time we also synchronize the buffers so we can build on an

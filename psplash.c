@@ -315,20 +315,6 @@ main (int argc, char** argv)
 			 POKY_IMG_ROWSTRIDE,
 			 POKY_IMG_RLE_PIXEL_DATA);
 
-#ifdef PSPLASH_SHOW_PROGRESS_BAR
-  /* Draw progress bar border */
-  psplash_fb_draw_image (fb, 
-			 (fb->width  - BAR_IMG_WIDTH)/2, 
-			 SPLIT_LINE_POS(fb),
-			 BAR_IMG_WIDTH,
-			 BAR_IMG_HEIGHT,
-			 BAR_IMG_BYTES_PER_PIXEL,
-			 BAR_IMG_ROWSTRIDE,
-			 BAR_IMG_RLE_PIXEL_DATA);
-
-  psplash_draw_progress (fb, 0);
-#endif
-
 #ifdef PSPLASH_STARTUP_MSG
   psplash_draw_msg (fb, PSPLASH_STARTUP_MSG);
 #endif
